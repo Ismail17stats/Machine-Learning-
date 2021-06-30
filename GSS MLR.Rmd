@@ -45,3 +45,57 @@ model2 <- lm(HYSC ~ age_numeric, data = GSS_data)
 summary(model2)
 ```
 
+Comparing the adjusted$R^2$ the second model is much worse. But is it true that we should put "age_numeric" as non-significant?
+
+For now let's investigate more the first model, I am going to add the variable "born_in_us" and see what we get. 
+
+```{r}
+model3 <- lm(highest_year_of_school_completed ~ highest_year_school_completed_father + born_in_us, data = GSS_data)
+summary(model3)
+```
+There is a slight decrease in the adjusted$R^2$ 
+
+Interpreting this model, we can sat that for 1 year increase in the number of years of school a person's father has completed we would expect the number of years of school thet have completed to increase by 0.27937 $\approx$ 0.28 years, considering their immigration status is constant. 
+For the other coeficcient, we expect that a person born in the US will have 0.66 additional years of school, holding the variable "highest_year_school_completed_father" constant. Which makes sense, a person born in the US will have an easier access to school.
+
+Now let's try another model by replacing "highest_year_school_completed_father" by "age_numeric"
+
+```{r}
+### I used HYCS otherwise we will get an error "double" : NAs introduced by coercion
+model4 <- lm(HYSC ~ age_numeric + born_in_us, data = GSS_data)
+summary(model4)
+```
+
+
+If I had to calculate the expected "highest_year_of_school_completed" given a person is born in the US with 45 years of age:
+
+```{r}
+12.232844 -0.004657 *45 + 1.882562
+```
+We would expect the person to have 14 years of school. Checking the table the year ranges between 14 and 16, so our model is good despite the variable age being not significant.
+
+We can also use the predict fucntion. 
+```{r}
+predict(model4, newdata = data.frame(age_numeric = 45, born_in_us = 'Yes' ))
+```
+Now we will explore what happens when we combine highest_year_school_completed_father + age_numeric
+```{r}
+model5 <- lm(highest_year_of_school_completed ~ highest_year_school_completed_father + age_numeric, data = GSS_data)
+summary(model5)
+```
+
+We have a significant increase of the adjusted$R^2$ and age_numeric is now a significant variable. 
+
+We can interpret model 5 by saying that a 1 year increase in the number of school completed by the father, we would expect a 0.314 increase in the number of years a person completes while age is constant. And for 1 year increase in age, expect a 0.0187 $\approx$ 0.02 year increase in the number of completed years in school while highest_year_school_completed_father is constant.
+
+But we don't truly know if "highest_year_school_completed_father" is a more significant variable than "age_numeric". Usually in any survey, study or research, age is an essential factor. So we shouldn't trust fully the model when it says a variable is non significant like in model 2. Moreover, the data is not on the same scale. 
+Let's see how the model will predict the number of school years given the father completed 13 years and is 45 years old. 
+
+```{r}
+predict(model5, newdata = data.frame(highest_year_school_completed_father = 13, age_numeric = 45))
+```
+
+We get 14.38 (14 years for simplicity). Now let's check the residuals
+
+
+

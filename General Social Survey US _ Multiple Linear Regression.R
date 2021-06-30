@@ -1,3 +1,6 @@
+###Blackbox for the code
+
+
 getwd()
 library(readxl)
 library(tidyverse)
@@ -32,4 +35,16 @@ summary(model1)
 HYSC <- as.numeric(GSS_data$highest_year_of_school_completed)
 model2 <- lm(HYSC ~ age_numeric, data = GSS_data)
 summary(model2)
+
+model3 <- lm(highest_year_of_school_completed ~ highest_year_school_completed_father + born_in_us, data = GSS_data)
+
+summary(model3)
+
+model4 <- lm(HYSC ~ age_numeric + born_in_us, data = GSS_data)
+summary(model4)
+
+
+model5 <- lm(highest_year_of_school_completed ~ highest_year_school_completed_father + age_numeric, data = GSS_data)
+summary(model5)
+
 

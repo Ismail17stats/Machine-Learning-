@@ -48,3 +48,8 @@ model5 <- lm(highest_year_of_school_completed ~ highest_year_school_completed_fa
 summary(model5)
 
 
+GSS_data %>%
+  filter(age_numeric==45, highest_year_school_completed_father == 12)%>% 
+  slice(1) %>%
+  glimpse()
+

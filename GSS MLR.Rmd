@@ -89,13 +89,36 @@ We have a significant increase of the adjusted$R^2$ and age_numeric is now a sig
 We can interpret model 5 by saying that a 1 year increase in the number of school completed by the father, we would expect a 0.314 increase in the number of years a person completes while age is constant. And for 1 year increase in age, expect a 0.0187 $\approx$ 0.02 year increase in the number of completed years in school while highest_year_school_completed_father is constant.
 
 But we don't truly know if "highest_year_school_completed_father" is a more significant variable than "age_numeric". Usually in any survey, study or research, age is an essential factor. So we shouldn't trust fully the model when it says a variable is non significant like in model 2. Moreover, the data is not on the same scale. 
-Let's see how the model will predict the number of school years given the father completed 13 years and is 45 years old. 
+Let's see how the model will predict the number of school years given the father completed 12 years and is 45 years old. 
 
 ```{r}
-predict(model5, newdata = data.frame(highest_year_school_completed_father = 13, age_numeric = 45))
+predict(model5, newdata = data.frame(highest_year_school_completed_father = 12, age_numeric = 45))
 ```
 
-We get 14.38 (14 years for simplicity). Now let's check the residuals
+We get 14.07 (14 years). Now let's check the residuals
+```{r}
+
+#Here we get the first person aged 45 with a highest_year_school_completed_father == 12 and all its details
+ GSS_data %>%
+  filter(age_numeric==45, highest_year_school_completed_father == 12)%>% 
+  slice(1) %>%
+  glimpse()
+
+```
 
 
+The residual is the observed number of highest_year_of_school_completed: 19 - the predicted number: 14.07177
+So the Res = 4.93
 
+
+Finnaly let's try to make the model using the 3 explanatory variables:
+-highest_year_school_completed_father 
+-age_numeric
+-born_in_us
+
+```{r}
+model6 <- lm(highest_year_of_school_completed ~ highest_year_school_completed_father + age_numeric + born_in_us, data = GSS_data)
+summary(model6)
+```
+
+All the coefficients seems to be significant, I might do more research to see if we can optimize this using Ridge, Lasso, or EN. 

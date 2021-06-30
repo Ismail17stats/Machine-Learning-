@@ -16,7 +16,7 @@ We will try to predict the highest level of highschool completed by a person bas
 GSS_data <- read_excel("GSS Clean Final Version Ismail.xlsx")
 
 #Some cleaning 
-#Age of respondent have characters in some cells ("89 or older") gonna get rid of that 
+#Age of respondent have characters in some cells ("89 or older") gotta get rid of that 
 
 GSS_data <- GSS_data %>% 
   mutate(age_numeric = parse_number(age_of_respondent))
@@ -32,9 +32,16 @@ geom_point(aes(y = highest_year_of_school_completed,
                x = high_scool_father))
 
 ```
+We can see that as a person's father year of school goes up, their highest year of school goes up.
 
+Here I am just testing the highest year of school completed with different variables using simple LR. 
 
 ```{r}
 model1 <- lm(highest_year_of_school_completed ~ highest_year_school_completed_father , data = GSS_data)
+summary(model1)
+
+HYSC <- as.numeric(GSS_data$highest_year_of_school_completed)
+model2 <- lm(HYSC ~ age_numeric, data = GSS_data)
+summary(model2)
 ```
 
